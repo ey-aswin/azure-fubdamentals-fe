@@ -46,8 +46,6 @@
 
 // export default BlobComponent;
 
-
-
 import React, { useEffect, useRef, useState } from "react";
 import { getAllBlobs, removeBlob, uploadBlob } from "./blob.networkcalls";
 
@@ -101,22 +99,25 @@ const BlobComponent: React.FC = () => {
     }
   };
 
-  const hanldeRemove = async(item:any)=>{
-   
-try {
-    // Call the API; ignore the response body unless you need it
-    await removeBlob(item.blob_item_name);
-
-    // Safely update state using functional form (avoids stale closures)
-    setBlobData(prev =>
-      prev.filter((b:any) => b.blob_item_name !== item.blob_item_name)
+  const hanldeRemove = async (item: any) => {
+    const isConfirm = window.confirm(
+      "Are you sure you want to delete this blob?",
     );
-  } catch (err) {
-    console.error("Failed to delete blob:", err);
-    alert("Failed to delete blob. Please try again.");
-  }
+    if (!isConfirm) return;
 
-  }
+    try {
+      // Call the API; ignore the response body unless you need it
+      await removeBlob(item.blob_item_name);
+
+      // Safely update state using functional form (avoids stale closures)
+      setBlobData((prev) =>
+        prev.filter((b: any) => b.blob_item_name !== item.blob_item_name),
+      );
+    } catch (err) {
+      console.error("Failed to delete blob:", err);
+      alert("Failed to delete blob. Please try again.");
+    }
+  };
 
   return (
     <div className="p-4">
@@ -168,7 +169,12 @@ try {
         {blobData.map((item, ind) => (
           <div key={ind} className="m-4 w-1/6 flex items-start">
             <img src={item.blob_url} className="h-[20vh]" alt={`blob-${ind}`} />
-            <button className="p-1 bg-red-300 m-1" onClick={()=>hanldeRemove(item)}>X</button>
+            <button
+              className="p-1 bg-red-300 m-1"
+              onClick={() => hanldeRemove(item)}
+            >
+              X
+            </button>
           </div>
         ))}
       </div>
@@ -177,4 +183,4 @@ try {
 };
 
 export default BlobComponent;
-``
+``;
