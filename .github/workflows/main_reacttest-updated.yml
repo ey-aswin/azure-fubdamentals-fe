@@ -12,6 +12,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: VITE_SERVER_URL
     permissions:
       contents: read #This is required for actions/checkout
 
@@ -26,7 +27,7 @@ jobs:
       - name: npm install, build, and test
         env:
           VITE_SERVER_URL: ${{ vars.VITE_SERVER_URL }}
-          SERVER_URL_V2: ${{ vars.SERVER_URL_V2 }}
+          VITE_SERVER_URL_V2: ${{ vars.VITE_SERVER_URL_V2 }}
           # REACT_APP_AUTH_URL: ${{ secrets.REACT_APP_AUTH_URL }}
 
         run: |
@@ -59,4 +60,6 @@ jobs:
           package: .
 
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AA47CBC7333A46F6AF5171AC66E62361 }}
+
+
 
