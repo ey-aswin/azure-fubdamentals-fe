@@ -24,6 +24,11 @@ jobs:
           node-version: '24.x'
 
       - name: npm install, build, and test
+        env:
+          VITE_SERVER_URL: ${{ secrets.VITE_SERVER_URL }}
+          SERVER_URL_V2: ${{ secrets.SERVER_URL_V2 }}
+          # REACT_APP_AUTH_URL: ${{ secrets.REACT_APP_AUTH_URL }}
+
         run: |
           npm install
           npm run build --if-present
@@ -52,4 +57,5 @@ jobs:
           app-name: 'reacttest-updated'
           slot-name: 'Production'
           package: .
+
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AA47CBC7333A46F6AF5171AC66E62361 }}
