@@ -17,16 +17,28 @@ const PaginatedTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totlalPages = 10;
   const itemsPerPage = 10;
+  const handleSkeletonLoader = (state: boolean) => {
+    if (state === false) {
+      setTimeout(() => {
+        setSkeletonLoader(state);
+      }, 5000);
+    } else {
+      setSkeletonLoader(state);
+    }
+
+    // setSkeletonLoader(state);
+  };
+
   const fetchData = async (page: number) => {
     try {
       const todoData = await getTodoData(page);
       if (todoData && Array.isArray(todoData)) {
         setTableData((prev) => [...todoData]); // ✅ Safe update
-        setSkeletonLoader(false);
+        handleSkeletonLoader(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      setSkeletonLoader(false);
+      handleSkeletonLoader(false);
     }
   };
 
@@ -37,31 +49,37 @@ const PaginatedTable: React.FC = () => {
   for (let i = 0; i < itemsPerPage; i++) {
     paginationItems.push(
       <button
-        style={{margin:"10px", padding:"10px", backgroundColor: currentPage === i + 1 ? 'lightblue' : 'black'}}
+        style={{
+          margin: "10px",
+          padding: "10px",
+          backgroundColor: currentPage === i + 1 ? "lightblue" : "black",
+        }}
         key={i}
         onClick={() => {
-          setSkeletonLoader(true);
+          handleSkeletonLoader(true);
           setCurrentPage(i + 1);
           fetchData(i + 1);
         }}
       >
         {i + 1}
-      </button>
+      </button>,
     );
   }
 
   return (
-    <div>
+    <div className="flex items-center flex-col">
       <h2>Table</h2>
       <div style={{ height: "100vh", width: "80vw" }}>
         {skeletonLoader ? (
-          <Skeleton
-            height={600}
-            baseColor="#40464aff"
-            highlightColor="#1c1d20ff"
-            duration={1.2}
-            count={1}
-          />
+          <>
+            <Skeleton
+              height={50}
+              baseColor="#40464aff"
+              highlightColor="#1c1d20ff"
+              duration={1.2}
+              count={9}
+            />
+          </>
         ) : (
           <div>
             <table>
@@ -100,9 +118,7 @@ const PaginatedTable: React.FC = () => {
               </tbody>
             </table>
             <div></div>
-            <div style={{ marginTop: "20px" }}>
-              {paginationItems}
-            </div>
+            <div style={{ marginTop: "20px" }}>{paginationItems}</div>
           </div>
         )}
       </div>
